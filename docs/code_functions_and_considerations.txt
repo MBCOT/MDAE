@@ -1,0 +1,445 @@
+# As the quality of the code will be evaluated by the judges we have to consider several factors:
+# - The code should need to be developed in a way of abstraction API , that way we could focus on the interface
+#   without having a code working, we could simulate the return of a functions as a JSON object and the interface could still
+#   work and be tested, letting us working on different aspects on the projects at the same time.
+
+#  - There is a tight agenda to develop the code
+#  - Developing the code in abstraction API will let us change the background/minima/server code without afecting the interface.
+#  - Having an API for every DAPP will let us in the future expose those API's to third parties or services or let the same
+     Dapps of the project using them keeping the front-end code clean.
+
+#  - Working focus in an API way, will let us develop simple code, just collecting the information needed by the API function
+     from the interface and passing to the function call it will produce a clean an easy to understand code from the front-end
+     perspective and decoupling back-end/minima code from front-end.
+
+# - The functions of the API when possible should accept / return JSON Objects to let them later add any kind of extra
+  - information without having to modify the front-end API calls and let us add extra functionality on the back-end/minima
+    easily.
+
+##########################
+##### DAO API   DAO.js
+##########################
+The tokens must be created by hand and send it to the vault (multiple signature contract to extract them( at the end )),
+different vaults for any  kind of token can be set to add extra security.
+The tokens must be transfer from the vault to an script to let people to buy them.
+
+1.- The price can be fixed on every bunch of tokens transfered from the vault to the script hard coding the price on the script,
+which will gave us different addresses on every bunch of transfered tokens on that script, and a new script will be
+executed(created) every time a bunch of tokens is transfered from the vault.
+The DAO should track (if the price is hard coded) every time a script is created what give us a problem, as it will be more
+difficult by the DAO to be decentralized as how the DAO app every client installs on his node will know those new scripts ?
+So, a priory, creating a new script for every bunch of tokens transfered from the vault is not the best choice,
+the script's addresses where the to buy the tokens must be fixed and know since the begining.
+
+
+2.- The prince can be set on every token by state variable, which let the DAO in a near future change the
+price on all the tokens that are on the script (this would imply modify every token and a transaction for each one of them,
+so kind of a flashLoan contract on every token to change his state variable)
+
+3.- The price could also be fixed on a basic ## tokenPrice ## configuration that would be needed to be check every time a buy is done,
+setting the price on the transaction when the buy is done as state variable based on that ## tokenPrice ## configuration, so the
+advantage on this setting is that only changing one token, you change the price of all of them and this could also be
+controlled by some kind of ORACLE.
+
+4.- It is a exchange contract where you pay some minimas and receive some tokens.
+
+# functions:
+
+# Check if script exist and if not execute it and track it
+---->init()
+
+#
+# input:  {"type":"tokenID-tokenName", "amount":number, "destination":"address", "origin_funds":"coind", "external_funds":{"blockchain":"String", "amount":number}}
+# output: {"result":boolean, "message":String}
+
+---->buy_token (JSON object)
+
+
+
+
+##########################
+##### ADVERTISER API   ADVERTISER.js
+##########################
+An advertiser can buy 10k tokens on a DAO to configure the tokens gathered with their publicity, so we have a doubt:
+We need to configure those 10k tokens with the same configuration of publicity, so here are two ways we think it can be done, but we are not sure:
+
+1 : FlasLoan contract that on the same transaction sent the token to himself setting state variables with the information, the tokens are a whole unit coind of 10k tokens.
+So if we do that, then every unit of those tokens the advertiser sent to any place to publish his advertise will be have the state variables setted ?
+
+2: FlasLoan contract that on the same transaction sent the token to himself but setting as state variable anoter token called **ConfigurationTOKEN**, unique for that bunch of 10k tokens of publicity,
+that way, the advertiser could change the info of any thouse 10k tokens on the fly, but the question is the same, the state variable information set on the transaction with the ConfigurationTOKEN ID
+will be preserved when a unit of those tokens will be sent to someplace  to publish his advertise ?
+
+---- considerations
+3: The Tokens of advertiser are bought on the DAO, but they are generic to everyone, so no speciall contract can be set on them.
+
+---- Solutions ?
+if sending one unit of those tokens to any place doesn't preserve the state variables what do do ?
+
+---> Create a specific script for those 10k tokens and send the 10k tokens into that script making them that in order to spent them the state variable must be preserved?
+
+---> if you don't create the script holder when the tokens are bought (you could configure them on the same operation of the bought) but lets stay on the option, we want
+to configure them later, so the Advertiiser Dapp could have a send_tokens method that will do a transaction and will force the state variables to be set set with the
+state variables (they have been  configured after the buy on the whole bunch of 10K tokens) , but does not protect the tokens if the Advertiser send them without using
+the Advertiser Dapp and send them using his wallet. So, if we want to grant 100% that the tokens are protected with the info set on them, they should be sent to an script
+that would grant that whatever method for sending them is chosen, the previous state variables must be present, that is what I interpret ? what do you thing ? @MIC Minima Devs
+
+### Depending on the solutions we chose we can have different functions and aproaches ###
+
+1. Option-1:
+  - A Json Object is given to the function as input with the info introduced from interface and a boolean TRUE is given
+  as (is_state_vars)
+  - The function creates an script configured with the information provided and send the tokens into the script with
+  the configured info as state variables, the script will have to assure that when a token is taken out of the script it
+  contains the same state variables it had before on the new transaction in order it can be spent.
+  - The function returns a Json Object, with a result, a message and the script address.
+
+2. Option-2:
+  - A Json Object is given to the function as input with the info introduced from interface and a boolean FALSE is given
+  as (is_state_vars)
+  - The function creates an script configured with the information provided and send the tokens into the script with
+  the configured info into a new TokenConfiguration, where its tokenID is set as state variable, the script will have
+  to assure that when a token is taken out of the script it contains the same tokenID it had before on the new transaction
+  in order it can be spent.
+  - The function returns a Json Object, with a result, a message and the script address and the
+   tokenId with all configuration set on it.
+
+#functions
+
+#
+# input: {"tokens":[token1, token2, token3,....], "optionsAdvertising":{"type":"String(text, survey, image, video)","source":"url","text":[text1, text2, text3....],"rules":{},targets:[{Object-1},{Object-2},{Object-3}]}}
+# output: {"result":boolean, "message":String, "script":"", "tokenID":"tokenID"}
+
+example possible input Json Onject:
+{
+"tokens":[
+    coinid(token1) can be 10k tokens,
+    coinid(token2),
+    coinid(token3)
+    ],
+"optionsAdvertising": {
+    "type":"text",
+    "text":["This is the first line of publicity", "this is the second line of publicity", "this is a third line link of publicity"],
+    "rules":{
+      "font-size":"12",
+      "position.x": "200",
+      "position.y": "200",
+      "link_click": TRUE,
+      "link_code_verification": FALSE,
+      "reward_viewer":"address",
+      "reward_third_party":"address"
+      "reward_viewer_amount":0.55
+      "reward_third_party_amount"0.012
+    "targets":[
+      {
+      "type":"DApp",
+      "name-id": "1212313-123123-123123",
+      "script_address":"address",
+      "wallet":"address"
+      },
+      {
+      "type":"Game",
+      "script_address":address,
+      }
+    ]
+    },
+},
+----->configure_tokens(JSON object, is_state_vars)
+
+
+@@@@@@@@ Pending to do Profile API
+@@@@@@@@ Pending to do Tracker API
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+--------  basic tests before doing and dapp ----------------
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+------------------------------------------------------------
+1: Simulate the bought of 100 tokens:
+------------------------------------------------------------
+
+-> tokencreate name:gDAE amount:100 decimals:0
+<result>
+"tokenid":"0x3D02BDB2BBC139B5AD96AE9B3585FA647A62583A58E8D26DA482E1CCBBD52B66",
+</result>
+
+------------------------------------------------------------
+2: Configure the tokens with state variables simulating are configured by AdvertiserDapp using
+getaddress, send tokens to that address with send command and some state variables configured
+state:{"1":"[First line publicity]", "2":"[Second line publicity]", "3":"[Third line publicity]"}
+------------------------------------------------------------
+
+->send address:0xA75624C576DB0D737C498706EC7A43E887FD8C3BD2C01A5C373629EE267AC824 amount:100 tokenid:0x3D02BDB2BBC139B5AD96AE9B3585FA647A62583A58E8D26DA482E1CCBBD52B66 state:{"1":"[First line publicity]", "2":"[Second line publicity]", "3":"[Third line publicity]"}
+<result>
+->coins
+{
+  "command":"coins",
+  "status":true,
+  "pending":false,
+  "response":[{
+    "coinid":"0x6572D5EA204DDE5B2337D7BEB271CE6BCC132CFE70CE142382E62FBB7DD1CBD0",
+    "amount":"0.000000000000000000000000000000000000000001",
+    "address":"0xA75624C576DB0D737C498706EC7A43E887FD8C3BD2C01A5C373629EE267AC824",
+    "miniaddress":"MxG0857AZWCATMR1YPNZWC70RM7KGV8GVUZZEUWZ0D5ZDPM57N2CUM84G7P3G0R",
+    "tokenid":"0x3D02BDB2BBC139B5AD96AE9B3585FA647A62583A58E8D26DA482E1CCBBD52B66",
+    "token":{
+      "name":{
+        "name":"gDAE"
+      },
+      "coinid":"0xB317CB0F5EF93CC4709C6625B744BFA5C29CDEC6DBE2AB08A77251715FA83AF0",
+      "total":"100",
+      "decimals":0,
+      "script":"RETURN TRUE",
+      "totalamount":"0.000000000000000000000000000000000000000001",
+      "scale":"44",
+      "created":"8250",
+      "tokenid":"0x3D02BDB2BBC139B5AD96AE9B3585FA647A62583A58E8D26DA482E1CCBBD52B66"
+    },
+    "tokenamount":"100",
+    "storestate":true,
+    "state":[{
+      "port":1,
+      "type":4,
+      "data":"[First line publicity]"
+    },
+    {
+      "port":2,
+      "type":4,
+      "data":"[Second line publicity]"
+    },
+    {
+      "port":3,
+      "type":4,
+      "data":"[Third line publicity]"
+    }],
+    "spent":false,
+    "mmrentry":"10",
+    "created":"8529"
+  },
+</result>
+
+---------------------------------------------------------------------
+3: Create very simple smart contract that grants that every token sent into it,
+can only get out if the state variables are preserved with the same values they were set up,
+and only by the onwer (the advertiser who sent the tokens into the script) by one of his
+node address signedby(publickey(owner node's address)) as his node is the only one that will
+have the private key of the publickey used or any one of the advertiser node, to spent the publicity tokens he bought.
+---------------------------------------------------------------------
+
+script:
+ASSERT SIGNEDBY(0xA73525177A4165E1C93791001D3C6C2A3080E6CFDF8A67C0699C85E70D6B982A)
+ASSERT SAMESTATE ( 1 1 )
+ASSERT SAMESTATE ( 2 2 )
+ASSERT SAMESTATE ( 3 3 )
+RETURN TRUE
+
+------lets test the script and get a clean useful script to use with any of advertiser publickey:
+
+->runscript script:"ASSERT SIGNEDBY(0xA73525177A4165E1C93791001D3C6C2A3080E6CFDF8A67C0699C85E70D6B982A) ASSERT SAMESTATE ( 1 1 ) ASSERT SAMESTATE ( 2 2 ) ASSERT SAMESTATE ( 3 3 ) RETURN TRUE" clean:true state:{"1":"[First line publicity]", "2":"[Second line publicity]", "3":"[Third line publicity]"} prevstate:{"1":"[First line publicity]", "2":"[Second line publicity]", "3":"[Third line publicity]"} signatures:["0xA73525177A4165E1C93791001D3C6C2A3080E6CFDF8A67C0699C85E70D6B982A"]
+
+-----clean script:
+ASSERT SIGNEDBY(0xA73525177A4165E1C93791001D3C6C2A3080E6CFDF8A67C0699C85E70D6B982A) ASSERT SAMESTATE(1 1) ASSERT SAMESTATE(2 2) ASSERT SAMESTATE(3 3) RETURN TRUE
+
+-----script address: "address":"0x1A5AC553629368A542578D21D15E9B1258B378A245766036F3DAB39ECC2A968A"
+
+------registar script al node:
+
+->newscript script:"ASSERT SIGNEDBY(0xA73525177A4165E1C93791001D3C6C2A3080E6CFDF8A67C0699C85E70D6B982A) ASSERT SAMESTATE(1 1) ASSERT SAMESTATE(2 2) ASSERT SAMESTATE(3 3) RETURN TRUE" track:true
+
+<result>
+{
+  "command":"newscript",
+  "params":{
+    "script":"ASSERT SIGNEDBY(0xA73525177A4165E1C93791001D3C6C2A3080E6CFDF8A67C0699C85E70D6B982A) ASSERT SAMESTATE(1 1) ASSERT SAMESTATE(2 2) ASSERT SAMESTATE(3 3) RETURN TRUE",
+    "track":"true"
+  },
+  "status":true,
+  "pending":false,
+  "response":{
+    "script":"ASSERT SIGNEDBY(0xA73525177A4165E1C93791001D3C6C2A3080E6CFDF8A67C0699C85E70D6B982A) ASSERT SAMESTATE(1 1) ASSERT SAMESTATE(2 2) ASSERT SAMESTATE(3 3) RETURN TRUE",
+    "address":"0x1A5AC553629368A542578D21D15E9B1258B378A245766036F3DAB39ECC2A968A",
+    "miniaddress":"MxG080QBB2Y6ZKJD2WK4YSD478YT6ZWB2PNH8W5EPG3DSUQMEFCZAKMH9WBUYSB",
+    "simple":false,
+    "default":false,
+    "publickey":"0x00",
+    "track":true
+  }
+}
+</result>
+
+------------------------------------------------------------
+4: send tokens into script address: 0x1A5AC553629368A542578D21D15E9B1258B378A245766036F3DAB39ECC2A968A
+setting again the states variables as they are set on the token and it does not have any contract to force it must be
+present until they are into the scripts
+------------------------------------------------------------
+
+send address:0x1A5AC553629368A542578D21D15E9B1258B378A245766036F3DAB39ECC2A968A amount:100 tokenid:0x3D02BDB2BBC139B5AD96AE9B3585FA647A62583A58E8D26DA482E1CCBBD52B66 state:{"1":"[First line publicity]", "2":"[Second line publicity]", "3":"[Third line publicity]"}
+<result>
+
+Minima @ 14/08/2022 19:54:05 [110.6 MB] : Transaction Mined : 0x00054AABE29BF8C508F08E508114DF3B778822C043E800697D36D0CA359FEC95
+Minima @ 14/08/2022 19:54:05 [127.8 MB] : NEW Spent Coin : {"coinid":"0x6572D5EA204DDE5B2337D7BEB271CE6BCC132CFE70CE142382E62FBB7DD1CBD0","amount":"0.000000000000000000000000000000000000000001","address":"0xA75624C576DB0D737C498706EC7A43E887FD8C3BD2C01A5C373629EE267AC824","miniaddress":"MxG0857AZWCATMR1YPNZWC70RM7KGV8GVUZZEUWZ0D5ZDPM57N2CUM84G7P3G0R","tokenid":"0x3D02BDB2BBC139B5AD96AE9B3585FA647A62583A58E8D26DA482E1CCBBD52B66","token":{"name":{"name":"gDAE"},"coinid":"0xB317CB0F5EF93CC4709C6625B744BFA5C29CDEC6DBE2AB08A77251715FA83AF0","total":"100","decimals":0,"script":"RETURN TRUE","totalamount":"0.000000000000000000000000000000000000000001","scale":"44","created":"8250","tokenid":"0x3D02BDB2BBC139B5AD96AE9B3585FA647A62583A58E8D26DA482E1CCBBD52B66"},"tokenamount":"100","storestate":true,"state":[{"port":1,"type":4,"data":"[First line publicity]"},{"port":2,"type":4,"data":"[Second line publicity]"},{"port":3,"type":4,"data":"[Third line publicity]"}],"spent":true,"mmrentry":"10","created":"8529"}
+Minima @ 14/08/2022 19:54:05 [127.9 MB] : NEW Unspent Coin : {"coinid":"0x268729DFA363D79EE29CA95049A85FD0DB1C07C9513CB8687CF1135F900089F7","amount":"0.000000000000000000000000000000000000000001","address":"0x1A5AC553629368A542578D21D15E9B1258B378A245766036F3DAB39ECC2A968A","miniaddress":"MxG080QBB2Y6ZKJD2WK4YSD478YT6ZWB2PNH8W5EPG3DSUQMEFCZAKMH9WBUYSB","tokenid":"0x3D02BDB2BBC139B5AD96AE9B3585FA647A62583A58E8D26DA482E1CCBBD52B66","token":{"name":{"name":"gDAE"},"coinid":"0xB317CB0F5EF93CC4709C6625B744BFA5C29CDEC6DBE2AB08A77251715FA83AF0","total":"100","decimals":0,"script":"RETURN TRUE","totalamount":"0.000000000000000000000000000000000000000001","scale":"44","created":"8250","tokenid":"0x3D02BDB2BBC139B5AD96AE9B3585FA647A62583A58E8D26DA482E1CCBBD52B66"},"tokenamount":"100","storestate":true,"state":[{"port":1,"type":4,"data":"[First line publicity]"},{"port":2,"type":4,"data":"[Second line publicity]"},{"port":3,"type":4,"data":"[Third line publicity]"}],"spent":false,"mmrentry":"11","created":"8959"}
+
+</result>
+-----------------------------------------------------------
+5: try to send 1 token out of script without setting the exact same state vars and should fail as dosen't
+meet the contract rules
+-----------------------------------------------------------
+
+fail:    send address:0x81EF1C3C244FBE690452B25CA6D24FE1F023028F5A3DF7286BB35B53D3613F1D amount:1 tokenid:0x3D02BDB2BBC139B5AD96AE9B3585FA647A62583A58E8D26DA482E1CCBBD52B66
+<result>
+
+send address:0x81EF1C3C244FBE690452B25CA6D24FE1F023028F5A3DF7286BB35B53D3613F1D amount:1 tokenid:0x3D02BDB2BBC139B5AD96AE9B3585FA647A62583A58E8D26DA482E1CCBBD52B66
+{
+  "command":"send",
+  "params":{
+    "address":"0x81EF1C3C244FBE690452B25CA6D24FE1F023028F5A3DF7286BB35B53D3613F1D",
+    "amount":"1",
+    "tokenid":"0x3D02BDB2BBC139B5AD96AE9B3585FA647A62583A58E8D26DA482E1CCBBD52B66"
+  },
+  "status":false,
+  "pending":false,
+  "error":"No Coins of tokenid:0x3D02BDB2BBC139B5AD96AE9B3585FA647A62583A58E8D26DA482E1CCBBD52B66 available!"
+}
+
+</result>
+
+success !!! it should be, but is not !!! : send address:0x81EF1C3C244FBE690452B25CA6D24FE1F023028F5A3DF7286BB35B53D3613F1D amount:1 tokenid:0x3D02BDB2BBC139B5AD96AE9B3585FA647A62583A58E8D26DA482E1CCBBD52B66 state:{"1":"[First line publicity]", "2":"[Second line publicity]", "3":"[Third line publicity]"}
+--------
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ trying elias solution @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+->tokencreate name:aDAE amount:100 decimals:0
+"tokenid":"0x71664A6F9F832212E995DDD1C2B964251B5FEBB37F0BABA74AB612F783F33169"
+
+->newscript script:"RETURN SIGNEDBY(0x8CC58927AC06AD97BB1D11A42473AFCEF9C547038AFA94148C3BF9B9FB9662FF) AND SAMESTATE(1 1) AND SAMESTATE(2 2) AND SAMESTATE(3 3)" track:true
+{
+  "command":"newscript",
+  "params":{
+    "script":"RETURN SIGNEDBY(0x8CC58927AC06AD97BB1D11A42473AFCEF9C547038AFA94148C3BF9B9FB9662FF) AND SAMESTATE(1 1) AND SAMESTATE(2 2) AND SAMESTATE(3 3)",
+    "track":"true"
+  },
+  "status":true,
+  "pending":false,
+  "response":{
+    "script":"RETURN SIGNEDBY(0x8CC58927AC06AD97BB1D11A42473AFCEF9C547038AFA94148C3BF9B9FB9662FF) AND SAMESTATE(1 1) AND SAMESTATE(2 2) AND SAMESTATE(3 3)",
+    "address":"0x97D3A853BAB3E09193D793F426D067DC31EDC946EB67CF03F869BA0469182902",
+    "miniaddress":"MxG084NQEK57EYJS28P7YSJUGJD0PUS67MSWHNBCV7G7U39N826W6190AFEPPTW",
+    "simple":false,
+    "default":false,
+    "publickey":"0x00",
+    "track":true
+  }
+}
+
+send address:0x97D3A853BAB3E09193D793F426D067DC31EDC946EB67CF03F869BA0469182902 amount:100 tokenid:0x71664A6F9F832212E995DDD1C2B964251B5FEBB37F0BABA74AB612F783F33169 state:{"1":"[First line publicity]", "2":"[Second line publicity]", "3":"[Third line publicity]"}
+
+Minima @ 15/08/2022 14:44:51 [134.3 MB] : Transaction Mined : 0x00054525E978372908CC8259E0D36E69AAE99221CE8D538B84446B1AFF2A64F9
+Minima @ 15/08/2022 14:44:51 [151.5 MB] : NEW Spent Coin : {"coinid":"0x811E592271B04B11EEDFD1521693CF919FB55D66A53F1B52BBB810EA5925D40B","amount":"0.000000000000000000000000000000000000000001","address":"0xDE3021DD5B2ECA934DF9C6B76B677F1E05C7004DD7D3B0A0CCD7AD8DF81EB22C","miniaddress":"MxG086U60GTQMPEPA9KRUE6MTYMEVZU0N3G0JENQEZA1J6NYM6VG7YW5HPJ2S1S","tokenid":"0x71664A6F9F832212E995DDD1C2B964251B5FEBB37F0BABA74AB612F783F33169","token":{"name":{"name":"aDAE"},"coinid":"0x811E592271B04B11EEDFD1521693CF919FB55D66A53F1B52BBB810EA5925D40B","total":"100","decimals":0,"script":"RETURN TRUE","totalamount":"0.000000000000000000000000000000000000000001","scale":"44","created":"10823","tokenid":"0x71664A6F9F832212E995DDD1C2B964251B5FEBB37F0BABA74AB612F783F33169"},"tokenamount":"100","storestate":true,"state":[],"spent":true,"mmrentry":"12","created":"10823"}
+Minima @ 15/08/2022 14:44:51 [151.6 MB] : NEW Unspent Coin : {"coinid":"0xE02BB55CDAA162F7710AD446666ADA63CE1EDA943B8BF4C803DEA10F409A872A","amount":"0.000000000000000000000000000000000000000001","address":"0x97D3A853BAB3E09193D793F426D067DC31EDC946EB67CF03F869BA0469182902","miniaddress":"MxG084NQEK57EYJS28P7YSJUGJD0PUS67MSWHNBCV7G7U39N826W6190AFEPPTW","tokenid":"0x71664A6F9F832212E995DDD1C2B964251B5FEBB37F0BABA74AB612F783F33169","token":{"name":{"name":"aDAE"},"coinid":"0x811E592271B04B11EEDFD1521693CF919FB55D66A53F1B52BBB810EA5925D40B","total":"100","decimals":0,"script":"RETURN TRUE","totalamount":"0.000000000000000000000000000000000000000001","scale":"44","created":"10823","tokenid":"0x71664A6F9F832212E995DDD1C2B964251B5FEBB37F0BABA74AB612F783F33169"},"tokenamount":"100","storestate":true,"state":[{"port":1,"type":4,"data":"[First line publicity]"},{"port":2,"type":4,"data":"[Second line publicity]"},{"port":3,"type":4,"data":"[Third line publicity]"}],"spent":false,"mmrentry":"14","created":"10866"}
+
+
+fails:
+send address:0x01A7040B3C39C03AF393EBBF1E8B32C69E29CE5936F80FC57835FFA3314A02E3 amount:1 tokenid:0x71664A6F9F832212E995DDD1C2B964251B5FEBB37F0BABA74AB612F783F33169
+
+success:
+send address:0x01A7040B3C39C03AF393EBBF1E8B32C69E29CE5936F80FC57835FFA3314A02E3 amount:1 tokenid:0x71664A6F9F832212E995DDD1C2B964251B5FEBB37F0BABA74AB612F783F33169 state:{"1":"[First line publicity]", "2":"[Second line publicity]", "3":"[Third line publicity]"}
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ EXPORT TOKENS solution
+
+->tokens tokenid:0x71664A6F9F832212E995DDD1C2B964251B5FEBB37F0BABA74AB612F783F33169 action:export
+{
+  "command":"tokens",
+  "params":{
+    "tokenid":"0x71664A6F9F832212E995DDD1C2B964251B5FEBB37F0BABA74AB612F783F33169",
+    "action":"export"
+  },
+  "status":true,
+  "pending":false,
+  "response":{
+    "tokenid":"0x71664A6F9F832212E995DDD1C2B964251B5FEBB37F0BABA74AB612F783F33169",
+    "data":"0x00000020811E592271B04B11EEDFD1521693CF919FB55D66A53F1B52BBB810EA5925D40B0000000B52455455524E205452554500012C2C01640000000F7B226E616D65223A2261444145227D00022A47"
+  }
+}
+
+
+
+-----> setting up node 2 to import the exported TOKENS
+
+java -jar minima.jar -data edenbase2 -test -nop2p -clean -port 10001 -connect 127.0.0.1:9001
+
+->tokens action:import data:0x00000020811E592271B04B11EEDFD1521693CF919FB55D66A53F1B52BBB810EA5925D40B0000000B52455455524E205452554500012C2C01640000000F7B226E616D65223A2261444145227D00022A47
+{
+  "command":"tokens",
+  "params":{
+    "action":"import",
+    "data":"0x00000020811E592271B04B11EEDFD1521693CF919FB55D66A53F1B52BBB810EA5925D40B0000000B52455455524E205452554500012C2C01640000000F7B226E616D65223A2261444145227D00022A47"
+  },
+  "status":true,
+  "pending":false,
+  "response":{
+    "token":{
+      "name":{
+        "name":"aDAE"
+      },
+      "coinid":"0x811E592271B04B11EEDFD1521693CF919FB55D66A53F1B52BBB810EA5925D40B",
+      "total":"100",
+      "decimals":0,
+      "script":"RETURN TRUE",
+      "totalamount":"0.000000000000000000000000000000000000000001",
+      "scale":"44",
+      "created":"10823",
+      "tokenid":"0x71664A6F9F832212E995DDD1C2B964251B5FEBB37F0BABA74AB612F783F33169"
+    }
+  }
+}
+
+------> trying "send" command of imported token
+getaddress
+{
+  "command":"getaddress",
+  "status":true,
+  "pending":false,
+  "response":{
+    "script":"RETURN SIGNEDBY(0xA15958A88F0CDB5A8435F6F7265FFCC4B8391F148417C6832D1314AB1866E59B)",
+    "address":"0xD65A1935D04E284E317B198E10D9EBE8C66753F24D145017C010E064C2606226",
+    "miniaddress":"MxG086MB8CJBK2E51732UZPHZ8DJQV8ZPJY7SWD2H81FG0GS1WC4Z324RMQ5K5D",
+    "simple":true,
+    "default":true,
+    "publickey":"0xA15958A88F0CDB5A8435F6F7265FFCC4B8391F148417C6832D1314AB1866E59B",
+    "track":true
+  }
+}
+
+send address:0xD65A1935D04E284E317B198E10D9EBE8C66753F24D145017C010E064C2606226 amount:1 tokenid:0x71664A6F9F832212E995DDD1C2B964251B5FEBB37F0BABA74AB612F783F33169
+{
+  "command":"send",
+  "params":{
+    "address":"0xD65A1935D04E284E317B198E10D9EBE8C66753F24D145017C010E064C2606226",
+    "amount":"1",
+    "tokenid":"0x71664A6F9F832212E995DDD1C2B964251B5FEBB37F0BABA74AB612F783F33169"
+  },
+  "status":false,
+  "pending":false,
+  "error":"No Coins of tokenid:0x71664A6F9F832212E995DDD1C2B964251B5FEBB37F0BABA74AB612F783F33169 available!"
+}
+
+
+------> trying "spend tokens building a manual transaction from imported tokens of exported
+------> tokens from other node, where the tokens where into script with signedby, and the script has been
+------> executed also in the new node where the transaction is build "
+** !!! None of the parameters has shown any error, but the transaction was not signed by the other node, however
+       the error message once the transaction has been posted, not mention anything about signatures problem,
+       so, another doubt is that the exported tokens were into an script with stete variables setted with values
+       so, when imported those tokens what happen with those state variables, as they are part of the script conditions
+       that must be satisfy in order to spent the tokens !!!! *
+
+txncreate id:test1
+txninput id:test1 coindid:0x811E592271B04B11EEDFD1521693CF919FB55D66A53F1B52BBB810EA5925D40B address:0x97D3A853BAB3E09193D793F426D067DC31EDC946EB67CF03F869BA0469182902 amount:1
+txnoutput id:test1 address:0xBF9960C15BCA2E09CD27D79BC7C924E1D011B2A6C2D2F4ECC61A52CEF36240F1 amount:1
+txnbasics id:test1
+txnsign id:test1  publickey:auto
+txnpost id:test1
+
+Minima @ 16/08/2022 00:01:28 [155.6 MB] : Transaction Mined : 0x00002AC8B7C4086C399E82449036284AED549DF1AB965E7707AC7B2467D485AC
+Minima @ 16/08/2022 00:01:28 [155.8 MB] : Transaction error : Inputs LESS than Outputs
+Minima @ 16/08/2022 00:01:28 [155.9 MB] : Invalid Transaction Inputs and Outputs.. {"inputs":[{"coinid":"0x01","amount":"1","address":"0x97D3A853BAB3E09193D793F426D067DC31EDC946EB67CF03F869BA0469182902","miniaddress":"MxG084NQEK57EYJS28P7YSJUGJD0PUS67MSWHNBCV7G7U39N826W6190AFEPPTW","tokenid":"0x71664A6F9F832212E995DDD1C2B964251B5FEBB37F0BABA74AB612F783F33169","token":null,"storestate":true,"state":[],"spent":false,"mmrentry":"0","created":"0"}],"outputs":[{"coinid":"0x00","amount":"1","address":"0xD65A1935D04E284E317B198E10D9EBE8C66753F24D145017C010E064C2606226","miniaddress":"MxG086MB8CJBK2E51732UZPHZ8DJQV8ZPJY7SWD2H81FG0GS1WC4Z324RMQ5K5D","tokenid":"0x00","token":null,"storestate":true,"state":[],"spent":false,"mmrentry":"0","created":"0"}],"state":[],"linkhash":"0x00","transactionid":"0xE55AC66FAC34790AA8B7747C7ED8C0A60B477A5F3F9E11708654C65353760AA9"}
+Minima @ 16/08/2022 00:01:28 [155.9 MB] : TxPoW FAILS Basic checks from 0x00 0x00002AC8B7C4086C399E82449036284AED549DF1AB965E7707AC7B2467D485AC
