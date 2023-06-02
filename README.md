@@ -27,23 +27,13 @@ future and support scientific projects on green energies.
 
 ** PHASE 2 Documentation **
 -------------------------------------------------------------------------------------------------------
-- Architecture, Overview and conclusion of the MDAE <https://github.com/MBCOP/MDAE/blob/main/docs/mdae_Architecture_project_explanation.txt>
-- Easy example case of the DAO-Dapp <https://github.com/MBCOP/MDAE/blob/main/docs/Easy%20example%20case%20of%20the%20DAO-Dapp.odt>
-- Image 1 Dapp Advertiser: <https://github.com/MBCOP/MDAE/blob/main/images/AdvertiserDapp1.png>
-- Image 2 Dapp Advertiser: <https://github.com/MBCOP/MDAE/blob/main/images/AdvertiserDapp2.png>
-- Image 1 Dapp ShowPublicity: <https://github.com/MBCOP/MDAE/blob/main/images/Show-Publicity-DAPP1.png>
-- Image 2 Dapp ShowPublicity: <https://github.com/MBCPO/MDAE/blob/main/images/Show-Publicity-DAPP2.png>
-- Explainig video of the DAO-DApp and the Tracker-Dapp working togheter <https://github.com/MBCOP/MDAE/blob/main/docs/DAO-Dapp%20and%20Tracker-Dapp%20Working%20together%20(1).mp4>
+- Architecture, Overview and conclusion of the MDAE <https://github.com/MBCOT/MDAE/blob/main/docs/mdae_Architecture_project_explanation.txt>
+- Easy example case of the DAO-Dapp <https://github.com/MBCOT/MDAE/blob/main/docs/Easy%20example%20case%20of%20the%20DAO-Dapp.odt>
+- Image 1 Dapp Advertiser: <https://github.com/MBCOT/MDAE/blob/main/images/AdvertiserDapp1.png>
+- Image 2 Dapp Advertiser: <https://github.com/MBCOT/MDAE/blob/main/images/AdvertiserDapp2.png>
+- Image 1 Dapp ShowPublicity: <https://github.com/MBCOT/MDAE/blob/main/images/Show-Publicity-DAPP1.png>
+- Image 2 Dapp ShowPublicity: <https://github.com/MBCPOT/MDAE/blob/main/images/Show-Publicity-DAPP2.png>
+- Explainig video of the DAO-DApp and the Tracker-Dapp working togheter <https://github.com/MBCOT/MDAE/blob/main/docs/DAO-Dapp%20and%20Tracker-Dapp%20Working%20together%20(1).mp4>
 -------------------------------------------------------------------------------------------------------
-- Pitch Presentation: <https://github.com/MBCOP/MDAE/blob/main/docs/MDAE_Pitch_%20Presentation.pdf>
-- White Paper: <https://github.com/MBCOP/MDAE/blob/main/docs/MDAE%20White%20Paper%20v0.1.pdf>
-
-
-- **MinimaVerseDAO system** that can be used for Metaverse, Network States, Virtual
-worlds, games or even to rule a real country in a decentralized way.
-Anyone, in case of a metaverse should own their piece of land, one piece of land for running minima node, where everything could be tokenized,
-and with the tools provided from the DAO this "metaverse" could be one, multiples, or build the way their communities wanted.
-And also how to build a Proof_of_Identity specify on the DAO's things to do, where using the minima network, the same users of the network can build that universal system of identity where could be used everywhere.
-  - The Idea with all that should be done:
-    - https://github.com/elledaniels/MinimaVerseDAO
-    - https://github.com/elledaniels/Proof_of_Identity
+- Pitch Presentation: <https://github.com/MBCOT/MDAE/blob/main/docs/MDAE_Pitch_%20Presentation.pdf>
+- White Paper: <https://github.com/MBCOT/MDAE/blob/main/docs/MDAE%20White%20Paper%20v0.1.pdf>
