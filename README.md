@@ -27,28 +27,18 @@ future and support scientific projects on green energies.
 
 ** PHASE 2 Documentation **
 -------------------------------------------------------------------------------------------------------
-- Architecture, Overview and conclusion of the MDAE <https://github.com/MDAE-DAO/MDAE/blob/main/docs/mdae_Architecture_project_explanation.txt>
-- Easy example case of the DAO-Dapp <https://github.com/MDAE-DAO/MDAE/blob/main/docs/Easy%20example%20case%20of%20the%20DAO-Dapp.odt>
-- Image 1 Dapp Advertiser: <https://github.com/MDAE-DAO/MDAE/blob/main/images/AdvertiserDapp1.png>
-- Image 2 Dapp Advertiser: <https://github.com/MDAE-DAO/MDAE/blob/main/images/AdvertiserDapp2.png>
-- Image 1 Dapp ShowPublicity: <https://github.com/MDAE-DAO/MDAE/blob/main/images/Show-Publicity-DAPP1.png>
-- Image 2 Dapp ShowPublicity: <https://github.com/MDAE-DAO/MDAE/blob/main/images/Show-Publicity-DAPP2.png>
-- Explainig video of the DAO-DApp and the Tracker-Dapp working togheter <https://github.com/MDAE-DAO/MDAE/blob/main/docs/DAO-Dapp%20and%20Tracker-Dapp%20Working%20together%20(1).mp4>
+- Architecture, Overview and conclusion of the MDAE <https://github.com/MBCOP/MDAE/blob/main/docs/mdae_Architecture_project_explanation.txt>
+- Easy example case of the DAO-Dapp <https://github.com/MBCOP/MDAE/blob/main/docs/Easy%20example%20case%20of%20the%20DAO-Dapp.odt>
+- Image 1 Dapp Advertiser: <https://github.com/MBCOP/MDAE/blob/main/images/AdvertiserDapp1.png>
+- Image 2 Dapp Advertiser: <https://github.com/MBCOP/MDAE/blob/main/images/AdvertiserDapp2.png>
+- Image 1 Dapp ShowPublicity: <https://github.com/MBCOP/MDAE/blob/main/images/Show-Publicity-DAPP1.png>
+- Image 2 Dapp ShowPublicity: <https://github.com/MBCPO/MDAE/blob/main/images/Show-Publicity-DAPP2.png>
+- Explainig video of the DAO-DApp and the Tracker-Dapp working togheter <https://github.com/MBCOP/MDAE/blob/main/docs/DAO-Dapp%20and%20Tracker-Dapp%20Working%20together%20(1).mp4>
 -------------------------------------------------------------------------------------------------------
-- Pitch Presentation: <https://github.com/MDAE-DAO/MDAE/blob/main/docs/MDAE_Pitch_%20Presentation.pdf>
-- White Paper: <https://github.com/MDAE-DAO/MDAE/blob/main/docs/MDAE%20White%20Paper%20v0.1.pdf>
+- Pitch Presentation: <https://github.com/MBCOP/MDAE/blob/main/docs/MDAE_Pitch_%20Presentation.pdf>
+- White Paper: <https://github.com/MBCOP/MDAE/blob/main/docs/MDAE%20White%20Paper%20v0.1.pdf>
 
-## INCUBATOR Projects
 
-- **DNS fully decentralized** over Minima where wallets, emails, DApps, webs IoT devices
-can have a name.
-- **Decentralize AI Machine Learning Models** that can be tokenized and Minima can be
-used to verify that the model hasn’t been tampered with hashing the data and saving
-into tokens.
-So every minima node could act as a neuron or group of neurons to develope a
-**AI model** decentralizing the machine learning model to run on each minima node.
-  - One of the use cases, almost endless, was to guide a blind person using
-  the camera of his minima mobile and using external sources like GPS, and maps.
 - **MinimaVerseDAO system** that can be used for Metaverse, Network States, Virtual
 worlds, games or even to rule a real country in a decentralized way.
 Anyone, in case of a metaverse should own their piece of land, one piece of land for running minima node, where everything could be tokenized,
