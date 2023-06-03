@@ -1,6 +1,7 @@
-# MDAE
+# MDAE <img src="logo_yellow.png" width="350" title="Minima Decentralized Advertising Ecosystem*" alt="Minima Decentralized Advertising Ecosystem*" align="right">
 **Minima Decentralized Advertising Ecosystem**
 
+<br/><br/>
 ## MDAE would be the Advertising Ecosystem that was meant to be.
 
 The goal of this project is a Minima Decentralized Advertising Ecosystem where
