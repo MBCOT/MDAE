@@ -1,4 +1,4 @@
-# MDAE <img src="logo_yellow.png" width="350" title="Minima Decentralized Advertising Ecosystem" alt="Minima Decentralized Advertising Ecosystem" align="right">
+# MDAE <img src="logo_white.png" width="350" title="Minima Decentralized Advertising Ecosystem" alt="Minima Decentralized Advertising Ecosystem" align="right">
 **Minima Decentralized Advertising Ecosystem**
 
 <br/><br/>
